@@ -1,0 +1,44 @@
+{
+  "name": "Accounts Toolkit",
+  "short_name": "AccToolkit",
+  "start_url": ".",
+  "id": "/?source=pwa",
+  "display": "standalone",
+  "background_color": "#0d0d0d",
+  "theme_color": "#0d0d0d",
+  "orientation": "portrait",
+  "description": "An all-in-one toolkit for commerce students.",
+  "lang": "en-IN",
+  "scope": "/",
+  "categories": ["finance", "productivity", "education", "tools"],
+  "screenshots": [
+    {
+      "src": "assets/screenshot1.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Homescreen of the Toolkit"
+    },
+    {
+      "src": "assets/screenshot2.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "Calculator Tool"
+    }
+  ],
+  "icons": [
+    {
+      "src": "assets/icon.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
