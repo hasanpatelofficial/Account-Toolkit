@@ -79,6 +79,7 @@
             from { transform: translate(0, 0) rotate(0deg); }
             to { transform: translate(-150px, -100px) rotate(-180deg); }
         }
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
         @keyframes slideUpFadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         /* 3. Main App Structure */
@@ -136,7 +137,7 @@
         .app-icon .icon-label { font-size: 0.8rem; font-weight: 500; text-align: center; }
         .app-icon:nth-child(1) { animation-delay: 0.1s; } .app-icon:nth-child(2) { animation-delay: 0.15s; }
         .app-icon:nth-child(3) { animation-delay: 0.2s; } .app-icon:nth-child(4) { animation-delay: 0.25s; }
-        .app-icon:nth-child(5) { animation-delay: 0.3s; } 
+        .app-icon:nth-child(5) { animation-delay: 0.3s; } .app-icon:nth-child(6) { animation-delay: 0.35s; }
 
         /* ... All other CSS is included, but truncated here for brevity ... */
         .tool-card { padding: 16px; background: var(--glass-bg); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 20px; width: 100%; transition: box-shadow 0.3s, transform 0.3s; animation: slideUpFadeIn 0.4s both; }
@@ -150,13 +151,108 @@
         .notes-list li { background: rgba(0,0,0,0.3); padding: 10px 12px; border-radius: 8px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; line-height: 1.4; word-break: break-word; }
         .notes-list li span { flex-grow: 1; margin-right: 8px; }
         .notes-columns-container.side-by-side { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        #view-calculator .view-content, #calculator-display, #calculator-buttons, #calculator-controls { background: transparent; backdrop-filter: none; border: none; box-shadow: none; }
-        #calculator-display { flex-grow: 1; } #calculator-buttons { flex-shrink: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; padding: 16px 0px;}
+        /* --- CALCULATOR CSS BLOCK START --- */
+        /* Is poore block se purane calculator CSS ko replace karein */
+        
+        #view-calculator .view-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            gap: 10px;
+            background: transparent;
+            backdrop-filter: none;
+            border: none;
+            box-shadow: none;
+        }
+        #calculator-display {
+            text-align: right;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 16px 8px;
+            overflow: hidden;
+            background: transparent;
+        }
+        #calculator-expression-container {
+            min-height: 55px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+        #calculator-expression {
+            font-size: 3rem;
+            color: var(--text-primary); /* Result is White */
+            word-break: break-all;
+        }
+        #cursor {
+            width: 2px;
+            height: 3rem;
+            background-color: var(--accent-blue);
+            animation: blink 1s step-end infinite;
+            margin-left: 2px;
+        }
+        #calculator-preview {
+            font-size: 1.5rem;
+            min-height: 1.3em;
+            color: var(--text-secondary); /* Live Preview is Gray */
+        }
+        #calculator-controls {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            flex-shrink: 0;
+            background: transparent;
+        }
+        #calculator-controls button {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        #calculator-buttons {
+            position: relative; /* History panel ke liye zaroori */
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 14px;
+            padding: 16px 0px;
+            flex-shrink: 0;
+            background: transparent;
+        }
+        #history-panel {
+            position: absolute;
+            bottom: 100%; /* Buttons ke oopar khulega */
+            right: 0;
+            width: 100%;
+            background-color: #1c1c1c;
+            padding: 16px;
+            border-radius: 16px;
+            display: none;
+            z-index: 5;
+            box-shadow: 0 -5px 15px rgba(0,0,0,0.3);
+        }
+        #history-panel ul {
+            list-style: none;
+            text-align: right;
+            font-size: 1.2rem;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 0;
+        }
         .calc-btn { width: 100%; aspect-ratio: 1/1; border-radius: 50%; border: none; font-size: 1.8rem; font-weight: 500; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: filter 0.1s, transform 0.1s; }
         .calc-btn:active { transform: scale(0.95); filter: brightness(1.2); }
         .btn-num { background-color: #333; color: var(--text-primary); }
         .btn-op, .btn-special { background-color: #2E3A48; color: var(--accent-blue); }
         .btn-equal { background-color: var(--accent-blue); color: white; font-size: 2rem;}
+
+        /* --- CALCULATOR CSS BLOCK END --- */
+
+        /* JOURNAL TOOL SPECIFIC CSS */
+        #journal-entry-table { width: 100%; margin-top: 15px; border-collapse: collapse; }
+        #journal-entry-table th, #journal-entry-table td { padding: 10px; text-align: left; border-bottom: 1px solid #444; }
+        #journal-entry-table th { color: var(--text-secondary); }
+        #journal-entry-table td:nth-child(2), #journal-entry-table td:nth-child(3) { text-align: right; font-family: monospace; }
 
     </style>
 </head>
@@ -179,15 +275,57 @@
                 <a class="app-icon" href="#" data-view="view-percentage"><div class="icon-visual"><i class="ph-bold ph-chart-line-up"></i></div><span class="icon-label">Percentage</span></a>
                 <a class="app-icon" href="#" data-view="view-new-ratio"><div class="icon-visual"><i class="ph-bold ph-handshake"></i></div><span class="icon-label">New Ratio</span></a>
                 <a class="app-icon" href="#" data-view="view-divider"><div class="icon-visual"><i class="ph-bold ph-chart-pie-slice"></i></div><span class="icon-label">Ratio Divider</span></a>
+                
+                <!-- Naya Journal Guide Icon Yahan Jodein -->
+                <a class="app-icon" href="#" data-view="view-journal"><div class="icon-visual"><i class="ph-bold ph-book-open-text"></i></div><span class="icon-label">Journal Guide</span></a>
+                
                 <a class="app-icon" href="#" data-view="view-notes"><div class="icon-visual"><i class="ph-bold ph-notebook"></i></div><span class="icon-label">Notes</span></a>
             </div>
         </main>
         
         <!-- All Tool Sections HTML are included but truncated for brevity -->
-        <section id="view-calculator" class="view"> <div class="view-content"> <div id="calculator-display"> <div id="calculator-expression-container"> <div id="calculator-expression">0</div> <div id="cursor"></div> </div> <div id="calculator-preview"></div> </div> <div id="calculator-controls"><button id="history-btn">🕒</button></div> <div id="calculator-buttons"> <div id="history-panel"><ul></ul></div> <button class="calc-btn btn-special" data-action="clear">AC</button><button class="calc-btn btn-special" data-action="backspace">⌫</button><button class="calc-btn btn-special" data-action="negate">+/-</button><button class="calc-btn btn-op" data-value="/">÷</button> <button class="calc-btn btn-num" data-value="7">7</button><button class="calc-btn btn-num" data-value="8">8</button><button class="calc-btn btn-num" data-value="9">9</button><button class="calc-btn btn-op" data-value="*">×</button> <button class="calc-btn btn-num" data-value="4">4</button><button class="calc-btn btn-num" data-value="5">5</button><button class="calc-btn btn-num" data-value="6">6</button><button class="calc-btn btn-op" data-value="-">−</button> <button class="calc-btn btn-num" data-value="1">1</button><button class="calc-btn btn-num" data-value="2">2</button><button class="calc-btn btn-num" data-value="3">3</button><button class="calc-btn btn-op" data-value="+">+</button> <button class="calc-btn btn-special" data-value="%">%</button><button class="calc-btn btn-num" data-value="0">0</button><button class="calc-btn btn-num" data-value=".">.</button><button class="calc-btn btn-equal" data-action="=">=</button> </div> </div> </section>
+        <!-- Is poore section ko REPLACE karein -->
+        <section id="view-calculator" class="view">
+            <div class="view-content">
+                <div id="calculator-display">
+                    <div id="calculator-expression-container">
+                        <div id="calculator-expression">0</div>
+                        <div id="cursor"></div>
+                    </div>
+                    <div id="calculator-preview"></div>
+                </div>
+                <div id="calculator-controls"><button id="history-btn">🕒</button></div>
+                <div id="calculator-buttons">
+                    <div id="history-panel"><ul></ul></div>
+                    <button class="calc-btn btn-special" data-action="clear">AC</button><button class="calc-btn btn-special" data-action="backspace">⌫</button><button class="calc-btn btn-special" data-action="negate">+/-</button><button class="calc-btn btn-op" data-value="/">÷</button>
+                    <button class="calc-btn btn-num" data-value="7">7</button><button class="calc-btn btn-num" data-value="8">8</button><button class="calc-btn btn-num" data-value="9">9</button><button class="calc-btn btn-op" data-value="*">×</button>
+                    <button class="calc-btn btn-num" data-value="4">4</button><button class="calc-btn btn-num" data-value="5">5</button><button class="calc-btn btn-num" data-value="6">6</button><button class="calc-btn btn-op" data-value="-">−</button>
+                    <button class="calc-btn btn-num" data-value="1">1</button><button class="calc-btn btn-num" data-value="2">2</button><button class="calc-btn btn-num" data-value="3">3</button><button class="calc-btn btn-op" data-value="+">+</button>
+                    <button class="calc-btn btn-special" data-value="%">%</button><button class="calc-btn btn-num" data-value="0">0</button><button class="calc-btn btn-num" data-value=".">.</button><button class="calc-btn btn-equal" data-action="=">=</button>
+                </div>
+            </div>
+        </section>
         <section id="view-percentage" class="view"><div class="view-content"><div class="tool-card"><h2>Percentage</h2><div class="form-group"><label for="percent-main-number">Number</label><input id="percent-main-number" type="number" inputmode="decimal" placeholder="e.g., 1000"></div><div class="form-group"><label for="percent-value">Percentage</label><input id="percent-value" type="text" inputmode="decimal" placeholder="e.g., 10"></div><div id="percent-actions" style="display:flex; gap:10px;"><button class="btn" id="percent-add" style="width:100%;">Add %</button><button class="btn" id="percent-subtract" style="width:100%;">Subtract %</button></div><div id="percent-result-box" class="result-box">Result will show here</div></div></div></section>
         <section id="view-new-ratio" class="view"><div class="view-content"><div class="tool-card"><h2>New Profit Ratio</h2><div class="form-group"><label for="admission-old-ratio">Old Ratio</label><input id="admission-old-ratio" type="text" placeholder="e.g., 3:1"></div><div class="form-group"><label for="admission-new-share">New Partner's Share</label><input id="admission-new-share" type="text" placeholder="e.g., 1/5 or 20%"></div><div id="admission-result-box" class="result-box">Result will show here</div></div></div></section>
         <section id="view-divider" class="view"><div class="view-content"><div class="tool-card"><h2>Ratio Divider</h2><div class="form-group"><label for="splitter-total">Total Amount</label><input id="splitter-total" type="number" inputmode="decimal" placeholder="e.g., 1000"></div><div class="form-group"><label for="splitter-ratio">Ratio</label><input id="splitter-ratio" type="text" placeholder="e.g., 2:3:5"></div><div id="splitter-result-box" class="result-box">Result will show here</div></div></div></section>
+        
+        <!-- Naya Journal Guide Tool ka Page Yahan Jodein -->
+        <section id="view-journal" class="view">
+            <div class="view-content">
+                <div class="tool-card">
+                    <h2>Journal Entry Guide (AI)</h2>
+                    <div class="form-group">
+                        <label for="journal-input">Enter Transaction</label>
+                        <textarea id="journal-input" rows="3" placeholder="e.g., Purchased goods of 10,000 + GST 18% on credit from Mittal Ltd"></textarea>
+                    </div>
+                    <button id="journal-analyze-btn" class="btn" style="width: 100%;">Analyze Entry</button>
+                </div>
+                <div id="journal-result-box" class="result-box" style="display: none;">
+                    <!-- Result will be populated here by JavaScript -->
+                </div>
+            </div>
+        </section>
+        
         <section id="view-notes" class="view"><div class="view-content notes-menu-container" id="notes-menu-container"></div></section>
         <section id="view-notes-details" class="view"><div class="view-content" id="notes-details-container"></div></section>
         <section id="view-notes-custom" class="view"><div class="view-content"><div class="tool-card"><h2 style="font-size: 1.5rem;">My Custom Notes</h2><textarea id="custom-notes-textarea" placeholder="Write your formulas, tricks, or anything you want to remember here... Your notes will be saved automatically."></textarea></div></div></section>
@@ -204,8 +342,8 @@
 
         const viewTitles = {
             'app-homescreen': 'Accounts Toolkit', 'view-calculator': 'Calculator', 'view-percentage': 'Percentage Tool',
-            'view-new-ratio': 'New Profit Ratio', 'view-divider': 'Ratio Divider', 'view-notes': 'Notes',
-            'view-notes-details': 'Notes', 'view-notes-custom': 'My Custom Notes'
+            'view-new-ratio': 'New Profit Ratio', 'view-divider': 'Ratio Divider', 'view-journal': 'Journal Guide',
+            'view-notes': 'Notes', 'view-notes-details': 'Notes', 'view-notes-custom': 'My Custom Notes'
         };
 
         // --- CORE APP LOGIC ---
@@ -232,6 +370,56 @@
             if (currentView === 'view-notes-details' || currentView === 'view-notes-custom') showView('view-notes'); else showView('app-homescreen');
         });
 
+        // --- ALL OTHER TOOLS LOGIC (RESTORED) ---
+        const cleanNumber = (num) => parseFloat(num.toPrecision(15));
+        
+        // --- CALCULATOR LOGIC START ---
+        const journalInput = document.getElementById('journal-input');
+        const journalAnalyzeBtn = document.getElementById('journal-analyze-btn');
+        const journalResultBox = document.getElementById('journal-result-box');
+        
+        // API KEY IS INTEGRATED HERE
+        const GOOGLE_API_KEY = "AIzaSyCoof0MLw4wVrX7msggVVIrop-Uy4XXbPY";
+
+        async function getJournalEntryFromAI(transaction) {
+            if (!GOOGLE_API_KEY || GOOGLE_API_KEY === "YAHAN_APNI_API_KEY_DAALEIN") {
+                return { error: "API Key not configured correctly." };
+            }
+            const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GOOGLE_API_KEY}`;
+            const prompt = `You are an expert accountant. Analyze the following journal entry based on modern (increase/decrease) and golden rules of accounting. Your task is to identify the accounts affected, apply debit/credit rules, and handle GST automatically. For GST: If state is mentioned or implied same, split into CGST and SGST. If different state or not mentioned, use IGST. Assume a default rate of 18% if not specified. Respond ONLY with a valid JSON object. Do not add any text before or after the JSON. The JSON object must have this exact structure: { "analysis": "A brief explanation of which rules were applied.", "entries": [ { "account": "Account Name 1", "debit": 10000, "credit": null }, { "account": "To Account Name 2", "debit": null, "credit": 10000 } ] } Transaction to analyze: "${transaction}"`;
+            try {
+                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] }) });
+                if (!response.ok) { const errorData = await response.json(); throw new Error(`API Error: ${errorData.error.message}`); }
+                const data = await response.json();
+                const textResponse = data.candidates[0].content.parts[0].text;
+                const cleanJsonString = textResponse.replace(/```json|```/g, '').trim();
+                return JSON.parse(cleanJsonString);
+            } catch (error) { return { error: `Failed to analyze. ${error.message}` }; }
+        }
+        function displayJournalResult(data) {
+            if (data.error) { journalResultBox.innerHTML = `<p style="color: #ff4d4d;"><strong>Error:</strong> ${data.error}</p>`; return; }
+            let tableHTML = `<p><strong>Analysis:</strong> ${data.analysis}</p><table id="journal-entry-table"><thead><tr><th>Particulars</th><th>Debit (₹)</th><th>Credit (₹)</th></tr></thead><tbody>`;
+            let totalDebit = 0, totalCredit = 0;
+            data.entries.forEach(entry => {
+                const debitAmount = entry.debit ? parseFloat(entry.debit).toLocaleString('en-IN') : '';
+                const creditAmount = entry.credit ? parseFloat(entry.credit).toLocaleString('en-IN') : '';
+                tableHTML += `<tr><td>${entry.account}</td><td>${debitAmount}</td><td>${creditAmount}</td></tr>`;
+                if(entry.debit) totalDebit += parseFloat(entry.debit);
+                if(entry.credit) totalCredit += parseFloat(entry.credit);
+            });
+            tableHTML += `</tbody><tfoot><tr><td style="font-weight: bold;">Total</td><td style="font-weight: bold;">${totalDebit.toLocaleString('en-IN')}</td><td style="font-weight: bold;">${totalCredit.toLocaleString('en-IN')}</td></tr></tfoot></table>`;
+            journalResultBox.innerHTML = tableHTML;
+        }
+        journalAnalyzeBtn.addEventListener('click', async () => {
+            const transaction = journalInput.value.trim();
+            if (!transaction) { alert("Please enter a transaction to analyze."); return; }
+            journalResultBox.style.display = 'block';
+            journalResultBox.innerHTML = '<p>Analyzing with AI... Please wait.</p>';
+            vibrate();
+            const result = await getJournalEntryFromAI(transaction);
+            displayJournalResult(result);
+        });
+
         // --- NOTES LOGIC (ALL LOGIC RESTORED) ---
         const USER_NOTES_KEY = 'acct_notes_user_v2', CUSTOM_NOTES_KEY = 'acct_custom_notes_v1';
         let userNotes = JSON.parse(localStorage.getItem(USER_NOTES_KEY)) || {};
@@ -253,17 +441,61 @@
         document.getElementById('notes-details-container').addEventListener('submit', (e) => { if (e.target.classList.contains('add-note-form')) { e.preventDefault(); const input = e.target.querySelector('input'); const newItem = input.value.trim(); if (!newItem) return; const { category, subcategory, side } = e.target.dataset; if (!userNotes[category]) userNotes[category] = {}; if (!userNotes[category][subcategory]) userNotes[category][subcategory] = {}; if (!userNotes[category][subcategory][side]) userNotes[category][subcategory][side] = []; userNotes[category][subcategory][side].push(newItem); saveUserNotes(); renderNoteDetails(category); input.value = ''; } });
         document.getElementById('notes-details-container').addEventListener('click', (e) => { if (e.target.closest('.delete-note-btn')) { const btn = e.target.closest('.delete-note-btn'); const { category, subcategory, side, index } = btn.dataset; userNotes[category][subcategory][side].splice(parseInt(index, 10), 1); saveUserNotes(); renderNoteDetails(category); } });
 
-        // --- ALL OTHER TOOLS LOGIC (RESTORED) ---
-        const cleanNumber = (num) => parseFloat(num.toPrecision(15));
-        const [calcExpressionEl, calcPreviewEl, historyBtn, historyPanel] = [document.getElementById('calculator-expression'), document.getElementById('calculator-preview'), document.getElementById('history-btn'), document.getElementById('history-panel')]; let currentExpression = '0'; const CALC_HISTORY_KEY = 'acct_calc_history_v1';
+        // --- CALCULATOR LOGIC START ---
+        // Is poore block se purane calculator JS ko replace karein
+        const [calcExpressionEl, calcPreviewEl, historyBtn, historyPanel] = [document.getElementById('calculator-expression'), document.getElementById('calculator-preview'), document.getElementById('history-btn'), document.getElementById('history-panel')];
+        let currentExpression = '0'; 
+        const CALC_HISTORY_KEY = 'acct_calc_history_v1';
         const safeEval = (expr) => { try { if (/[^0-9\.\+\-\*\/\(\)\s%]/.test(expr)) return ''; let sanitized = expr.replace(/(\d*\.?\d+)%/g, '($1/100)'); return new Function('return ' + sanitized)(); } catch { return ''; } };
         const formatForDisplay = (str) => str.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
-        const renderHistory = () => { const history = (JSON.parse(localStorage.getItem(CALC_HISTORY_KEY)) || []).filter(item => Date.now() - item.time < 24 * 60 * 60 * 1000); localStorage.setItem(CALC_HISTORY_KEY, JSON.stringify(history)); historyPanel.querySelector('ul').innerHTML = history.length ? history.map(h => `<li>${h.exp} = ${h.res}</li>`).join('') : '<li>No recent history</li>'; };
-        const updateCalcDisplay = () => { calcExpressionEl.textContent = formatForDisplay(currentExpression.replace(/\*/g, '×')); let previewResult = safeEval(currentExpression); calcPreviewEl.textContent = previewResult !== '' ? `= ${formatForDisplay(cleanNumber(previewResult).toString())}` : ''; };
-        document.getElementById('calculator-buttons').addEventListener('click', (e) => { vibrate(); const target = e.target.closest('.calc-btn'); if (target) { const { value, action } = target.dataset; if (currentExpression === '0' && value && value !== '.') currentExpression = ''; if (value) currentExpression += value; if (action === 'clear') currentExpression = '0'; if (action === 'backspace') currentExpression = currentExpression.slice(0, -1) || '0'; if (action === 'negate') { if (currentExpression !== '0') { if (currentExpression.startsWith('-')) { currentExpression = currentExpression.substring(1); } else { currentExpression = '-' + currentExpression; } } } if (action === '=') { const finalResult = safeEval(currentExpression); if (finalResult !== '') { const cleanResult = cleanNumber(finalResult); const history = JSON.parse(localStorage.getItem(CALC_HISTORY_KEY)) || []; history.unshift({ exp: formatForDisplay(currentExpression.replace(/\*/g, '×')), res: formatForDisplay(cleanResult.toString()), time: Date.now() }); localStorage.setItem(CALC_HISTORY_KEY, JSON.stringify(history.slice(0, 50))); currentExpression = cleanResult.toString(); } } updateCalcDisplay(); } });
-        historyBtn.addEventListener('click', (e) => { e.stopPropagation(); renderHistory(); historyPanel.style.display = historyPanel.style.display === 'block' ? 'none' : 'block'; });
+        const renderHistory = () => {
+            const history = (JSON.parse(localStorage.getItem(CALC_HISTORY_KEY)) || []).filter(item => Date.now() - item.time < 24 * 60 * 60 * 1000);
+            localStorage.setItem(CALC_HISTORY_KEY, JSON.stringify(history));
+            historyPanel.querySelector('ul').innerHTML = history.length ? history.map(h => `<li>${h.exp} = ${h.res}</li>`).join('') : '<li>No recent history</li>';
+        };
+        const updateCalcDisplay = () => { 
+            calcExpressionEl.textContent = formatForDisplay(currentExpression.replace(/\*/g, '×')); 
+            let previewResult = safeEval(currentExpression);
+            calcPreviewEl.textContent = previewResult !== '' ? `= ${formatForDisplay(cleanNumber(previewResult).toString())}` : '';
+        }; 
+        document.getElementById('calculator-buttons').addEventListener('click', (e) => { 
+            vibrate(); 
+            const target = e.target.closest('.calc-btn');
+            if (target) { 
+                const { value, action } = target.dataset; 
+                if (currentExpression === '0' && value && value !== '.') currentExpression = ''; 
+                if (value) currentExpression += value; 
+                if (action === 'clear') currentExpression = '0'; 
+                if (action === 'backspace') currentExpression = currentExpression.slice(0, -1) || '0'; 
+                if (action === 'negate') {
+                    if (currentExpression !== '0') {
+                        if (currentExpression.startsWith('-')) { currentExpression = currentExpression.substring(1); }
+                        else { currentExpression = '-' + currentExpression; }
+                    }
+                }
+                if (action === '=') { 
+                    const finalResult = safeEval(currentExpression); 
+                    if (finalResult !== '') {
+                        const cleanResult = cleanNumber(finalResult);
+                        const history = JSON.parse(localStorage.getItem(CALC_HISTORY_KEY)) || [];
+                        history.unshift({ exp: formatForDisplay(currentExpression.replace(/\*/g, '×')), res: formatForDisplay(cleanResult.toString()), time: Date.now() });
+                        localStorage.setItem(CALC_HISTORY_KEY, JSON.stringify(history.slice(0, 50)));
+                        currentExpression = cleanResult.toString();
+                    }
+                } 
+                updateCalcDisplay(); 
+            } 
+        });
+        historyBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            renderHistory();
+            historyPanel.style.display = historyPanel.style.display === 'block' ? 'none' : 'block';
+        });
         document.addEventListener('click', () => { if (historyPanel) historyPanel.style.display = 'none'; });
         historyPanel.addEventListener('click', e => e.stopPropagation());
+        // --- CALCULATOR LOGIC END ---
+
+        // --- NEW JOURNAL ENTRY GUIDE (AI-POWERED) ---
         const [percentMainEl, percentValEl, percentResultEl, addBtn, subBtn] = [document.getElementById('percent-main-number'), document.getElementById('percent-value'), document.getElementById('percent-result-box'), document.getElementById('percent-add'), document.getElementById('percent-subtract')];
         const calculatePercentage = (mode = '') => { const main = parseFloat(percentMainEl.value) || 0; let pNum = parseFloat(percentValEl.value || '0'); if (isNaN(pNum)) { percentResultEl.textContent = 'Invalid Percentage'; return; } const pVal = main * (pNum / 100); if (mode === 'add') percentResultEl.innerHTML = `${main} + ${pNum}% = <strong>${cleanNumber(main + pVal)}</strong>`; else if (mode === 'sub') percentResultEl.innerHTML = `${main} - ${pNum}% = <strong>${cleanNumber(main - pVal)}</strong>`; else percentResultEl.innerHTML = `${pNum}% of ${main} is <strong>${cleanNumber(pVal)}</strong>`; };
         [percentMainEl, percentValEl].forEach(el => el.addEventListener('input', () => calculatePercentage())); addBtn.addEventListener('click', () => calculatePercentage('add')); subBtn.addEventListener('click', () => calculatePercentage('sub'));
