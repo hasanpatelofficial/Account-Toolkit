@@ -382,10 +382,10 @@
         const journalResultBox = document.getElementById('journal-result-box');
         
         // API KEY IS INTEGRATED HERE
-        const GOOGLE_API_KEY = "AIzaSyCxi_EXnglhol6fnVnzGP9LWcVhJTWyfQ0";
+        const GOOGLE_API_KEY = "YAHA API DAALE";
 
         async function getJournalEntryFromAI(transaction) {
-            if (!GOOGLE_API_KEY || GOOGLE_API_KEY === "AIzaSyCxi_EXnglhol6fnVnzGP9LWcVhJTWyfQ0") {
+            if (!GOOGLE_API_KEY || GOOGLE_API_KEY === "NO API") {
                 return { error: "API Key not configured correctly." };
             }
             const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GOOGLE_API_KEY}`;
