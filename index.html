@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Accounts Toolkit – Hasan</title>
+    
+    <!-- AdSense Verification Script -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-2445910772852310"
+         crossorigin="anonymous"></script>
+
+    <link rel="icon" type="image/png" href="assets/icon.png">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- PWA and Mobile-Friendly Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#0d0d0d">
+    <link rel="manifest" href="manifest.json">
+
+    <!-- Stylesheet Link -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-active-view="app-homescreen">
+    <audio id="click-sound" src="assets/click-sound.mp3" preload="auto"></audio>
+
+    <header class="app-header" id="app-header">
+        <div class="header-title-container">
+            <button class="btn-back" id="back-button" aria-label="Go Back"><i class="ph-bold ph-arrow-left"></i></button>
+            <h1 class="header-title" id="header-title">Accounts Toolkit</h1>
+            <span class="header-subtitle" id="header-subtitle">Made By Hasan Patel</span>
+        </div>
+    </header>
+
+    <div class="app-container">
+        <!-- Homescreen -->
+        <main id="app-homescreen" class="view active">
+            <div class="view-content">
+                <a class="app-icon" href="#" data-view="view-calculator"><div class="icon-visual"><i class="ph-bold ph-calculator"></i></div><span class="icon-label">Calculator</span></a>
+                <a class="app-icon" href="#" data-view="view-percentage"><div class="icon-visual"><i class="ph-bold ph-chart-line-up"></i></div><span class="icon-label">Percentage</span></a>
+                <a class="app-icon" href="#" data-view="view-new-ratio"><div class="icon-visual"><i class="ph-bold ph-handshake"></i></div><span class="icon-label">New Ratio</span></a>
+                <a class="app-icon" href="#" data-view="view-divider"><div class="icon-visual"><i class="ph-bold ph-chart-pie-slice"></i></div><span class="icon-label">Ratio Divider</span></a>
+                <a class="app-icon" href="#" data-view="view-journal"><div class="icon-visual"><i class="ph-bold ph-book-open-text"></i></div><span class="icon-label">Journal Guide</span></a>
+                <a class="app-icon" href="#" data-view="view-notes"><div class="icon-visual"><i class="ph-bold ph-notebook"></i></div><span class="icon-label">Notes</span></a>
+            </div>
+        </main>
+        
+        <!-- All Tool Sections -->
+        <section id="view-calculator" class="view"> <div class="view-content"> <div id="calculator-display"> <div id="calculator-expression-container"> <div id="calculator-expression">0</div> <div id="cursor"></div> </div> <div id="calculator-preview"></div> </div> <div id="calculator-controls"><button id="history-btn">🕒</button></div> <div id="calculator-buttons"> <div id="history-panel"><ul></ul></div> <button class="calc-btn btn-special" data-action="clear">AC</button><button class="calc-btn btn-special" data-action="backspace">⌫</button><button class="calc-btn btn-special" data-action="negate">+/-</button><button class="calc-btn btn-op" data-value="/">÷</button> <button class="calc-btn btn-num" data-value="7">7</button><button class="calc-btn btn-num" data-value="8">8</button><button class="calc-btn btn-num" data-value="9">9</button><button class="calc-btn btn-op" data-value="*">×</button> <button class="calc-btn btn-num" data-value="4">4</button><button class="calc-btn btn-num" data-value="5">5</button><button class="calc-btn btn-num" data-value="6">6</button><button class="calc-btn btn-op" data-value="-">−</button> <button class="calc-btn btn-num" data-value="1">1</button><button class="calc-btn btn-num" data-value="2">2</button><button class="calc-btn btn-num" data-value="3">3</button><button class="calc-btn btn-op" data-value="+">+</button> <button class="calc-btn btn-special" data-value="%">%</button><button class="calc-btn btn-num" data-value="0">0</button><button class="calc-btn btn-num" data-value=".">.</button><button class="calc-btn btn-equal" data-action="=">=</button> </div> </div> </section>
+        <section id="view-percentage" class="view"><div class="view-content"><div class="tool-card"><h2>Percentage</h2><div class="form-group"><label for="percent-main-number">Number</label><input id="percent-main-number" type="number" inputmode="decimal" placeholder="e.g., 1000"></div><div class="form-group"><label for="percent-value">Percentage</label><input id="percent-value" type="text" inputmode="decimal" placeholder="e.g., 10"></div><div id="percent-actions" style="display:flex; gap:10px;"><button class="btn" id="percent-add" style="width:100%;">Add %</button><button class="btn" id="percent-subtract" style="width:100%;">Subtract %</button></div><div id="percent-result-box" class="result-box">Result will show here</div></div></div></section>
+        <section id="view-new-ratio" class="view"><div class="view-content"><div class="tool-card"><h2>New Profit Ratio</h2><div class="form-group"><label for="admission-old-ratio">Old Ratio</label><input id="admission-old-ratio" type="text" placeholder="e.g., 3:1"></div><div class="form-group"><label for="admission-new-share">New Partner's Share</label><input id="admission-new-share" type="text" placeholder="e.g., 1/5 or 20%"></div><div id="admission-result-box" class="result-box">Result will show here</div></div></div></section>
+        <section id="view-divider" class="view"><div class="view-content"><div class="tool-card"><h2>Ratio Divider</h2><div class="form-group"><label for="splitter-total">Total Amount</label><input id="splitter-total" type="number" inputmode="decimal" placeholder="e.g., 1000"></div><div class="form-group"><label for="splitter-ratio">Ratio</label><input id="splitter-ratio" type="text" placeholder="e.g., 2:3:5"></div><div id="splitter-result-box" class="result-box">Result will show here</div></div></div></section>
+        <section id="view-journal" class="view"><div class="view-content"><div class="tool-card"><h2>Journal Entry Guide (AI)</h2><div class="form-group"><label for="journal-input">Enter Transaction</label><textarea id="journal-input" rows="3" placeholder="e.g., Purchased goods..."></textarea></div><button id="journal-analyze-btn" class="btn">Analyze Entry</button></div><div id="journal-result-box" class="result-box" style="display: none;"></div></div></section>
+        <section id="view-notes" class="view"><div class="view-content notes-menu-container" id="notes-menu-container"></div></section>
+        <section id="view-notes-details" class="view"><div class="view-content" id="notes-details-container"></div></section>
+        <section id="view-notes-custom" class="view"><div class="view-content"><div class="tool-card"><h2>My Custom Notes</h2><textarea id="custom-notes-textarea" placeholder="Write anything..."></textarea></div></div></section>
+    </div>
+
+    <!-- AdSense Ad Container -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-2445910772852310"
+         data-ad-slot="3662695524"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins> 
+
+    <!-- AdSense Logic File -->
+    <script src="ads.js"></script>
+
+    <!-- Main App Logic File -->
+    <script src="script.js"></script>
+</body>
+</html>
